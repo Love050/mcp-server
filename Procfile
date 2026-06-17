@@ -1,1 +1,1 @@
-web: python robtor_mcp_server.py
+worker: python mcp_pipe.py robtor.py

@@ -289,4 +289,4 @@ Yeh alert Robtor Health Pod ne bheja hai."""
         return "EMERGENCY! Koi contact nahi mila. ABHI 112 pe call karo!"
 
 if __name__ == "__main__":
-    mcp.run(transport="sse")
+    mcp.run(transport="stdio")

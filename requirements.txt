@@ -1,4 +1,7 @@
-mcp[cli]
+fastmcp
 supabase
 requests
-fastmcp
+python-dotenv
+mcp
+websockets
+mcp-proxy
