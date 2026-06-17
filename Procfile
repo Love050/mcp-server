@@ -1,0 +1,1 @@
+web: python robtor_mcp_server.py

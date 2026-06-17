@@ -1,0 +1,4 @@
+mcp[cli]
+supabase
+requests
+fastmcp
