@@ -39,7 +39,7 @@ def get_user_profile(name: str) -> str:
     if not profile.data:
         return "Profile data nahi mila."
     d = profile.data
-     return f"""
+         return f"""
     Naam: {d.get('name','N/A')}
     Age: {d.get('age','N/A')}
     Gender: {d.get('gender','N/A')}
