@@ -35,11 +35,20 @@ def get_user_profile(name: str) -> str:
     uid = get_uid_by_name(name)
     if not uid:
         return f"'{name}' ka profile nahi mila. Robtor app mein profile banao pehle."
-    profile = supabase.table("user_profile").select("*").eq("user_id", uid).single().execute()
+    profile = supabase.table("user_profile").select("*").eq("id", uid).single().execute()
     if not profile.data:
         return "Profile data nahi mila."
     d = profile.data
-    return f"Naam: {d.get('full_name')}, Umar: {d.get('age')}, Blood Group: {d.get('blood_group')}, Height: {d.get('height_cm')}cm, Weight: {d.get('weight_kg')}kg, Conditions: {d.get('medical_conditions','None')}, Allergies: {d.get('allergies','None')}"
+   return f"""
+    Naam: {d.get('name','N/A')}
+    Age: {d.get('age','N/A')}
+    Gender: {d.get('gender','N/A')}
+    Weight: {d.get('weight','N/A')} kg
+    Height: {d.get('height','N/A')} cm
+    BMI: {d.get('bmi','N/A')}
+    Goal: {d.get('weight_goal','N/A')}
+    Conditions: {d.get('conditions',[])}
+    """
 
 @mcp.tool()
 def get_health_summary(user_name: str) -> str:
@@ -146,12 +155,12 @@ def get_health_risks(user_name: str) -> str:
     uid = get_uid_by_name(user_name)
     if not uid:
         return "Profile nahi mila."
-    risks = supabase.table("health_risks").select("*").eq("user_id", uid).order("risk_level", desc=True).execute()
+    risks = supabase.table("health_risks").select("*").eq("user_id", uid).order("overall_risk_score", desc=True).execute()
     if not risks.data:
         return "Koi health risk data nahi mila."
     result = "Health Risks:\n"
     for r in risks.data:
-        result += f"- {r.get('risk_name')} | Level: {r.get('risk_level')} | Reason: {r.get('description')} | Action: {r.get('recommendation')}\n"
+        result += f"- {r.get('category')} | Current: {r.get('current_risk')} | Future: {r.get('future_risk_6months')} | Reason: {r.get('reason')} | Prevention: {r.get('prevention_tip')}\n"
     return result
 
 @mcp.tool()
@@ -165,11 +174,19 @@ def get_wearable_summary(user_name: str) -> str:
     uid = get_uid_by_name(user_name)
     if not uid:
         return "Profile nahi mila."
-    data = supabase.table("wearable_data").select("*").eq("user_id", uid).order("date", desc=True).limit(1).execute()
+   data = supabase.table("wearable_data").select("*").eq("user_id", uid).order("synced_at", desc=True).limit(1).execute()
     if not data.data:
         return "Koi wearable data nahi mila."
     w = data.data[0]
-    return f"Wearable Data ({w.get('date')}):\nKadam/Steps: {w.get('steps')}/10000\nNeend/Sleep: {w.get('sleep_hours')}hrs\nHeart Rate: {w.get('heart_rate')}bpm\nCalories: {w.get('calories_burned')}kcal\nActive: {w.get('active_minutes')}min"
+    return f"""
+    Wearable Data:
+    Steps: {w.get('avg_daily_steps')}
+    Sleep: {w.get('avg_sleep_hours')} hrs
+    Resting Heart Rate: {w.get('resting_heart_rate')} bpm
+    Calories Burned: {w.get('calories_burned')}
+    Source Device: {w.get('source_device')}
+    Last Sync: {w.get('synced_at')}
+    """
 
 @mcp.tool()
 def log_symptom(user_name: str, symptom: str, severity: str = "mild") -> str:
@@ -237,10 +254,10 @@ def trigger_emergency(user_name: str, situation: str = "Emergency") -> str:
 
     profile_info = "Unknown User"
     if uid:
-        profile = supabase.table("user_profile").select("full_name,age,blood_group,medical_conditions").eq("user_id", uid).single().execute()
+       profile = supabase.table("user_profile").select("*").eq("id", uid).single().execute()
         if profile.data:
             p = profile.data
-            profile_info = f"Naam: {p.get('full_name')} | Umar: {p.get('age')} | Blood: {p.get('blood_group')} | Conditions: {p.get('medical_conditions','None')}"
+            profile_info = f"Naam: {p.get('name')} | Umar: {p.get('age')} | Gender: {p.get('gender')} | Conditions: {p.get('conditions',[])}"
 
     message = f"""ROBTOR EMERGENCY ALERT
 
