@@ -39,7 +39,7 @@ def get_user_profile(name: str) -> str:
     if not profile.data:
         return "Profile data nahi mila."
     d = profile.data
-   return f"""
+     return f"""
     Naam: {d.get('name','N/A')}
     Age: {d.get('age','N/A')}
     Gender: {d.get('gender','N/A')}
@@ -178,7 +178,7 @@ def get_wearable_summary(user_name: str) -> str:
     if not data.data:
         return "Koi wearable data nahi mila."
     w = data.data[0]
-    return f"""
+        return f"""
     Wearable Data:
     Steps: {w.get('avg_daily_steps')}
     Sleep: {w.get('avg_sleep_hours')} hrs
