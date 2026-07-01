@@ -39,16 +39,16 @@ def get_user_profile(name: str) -> str:
     if not profile.data:
         return "Profile data nahi mila."
     d = profile.data
-        return f"""
-    Naam: {d.get('name','N/A')}
-    Age: {d.get('age','N/A')}
-    Gender: {d.get('gender','N/A')}
-    Weight: {d.get('weight','N/A')} kg
-    Height: {d.get('height','N/A')} cm
-    BMI: {d.get('bmi','N/A')}
-    Goal: {d.get('weight_goal','N/A')}
-    Conditions: {d.get('conditions',[])}
-    """
+    return f"""
+Naam: {d.get('name','N/A')}
+Age: {d.get('age','N/A')}
+Gender: {d.get('gender','N/A')}
+Weight: {d.get('weight','N/A')} kg
+Height: {d.get('height','N/A')} cm
+BMI: {d.get('bmi','N/A')}
+Goal: {d.get('weight_goal','N/A')}
+Conditions: {d.get('conditions',[])}
+"""
 
 @mcp.tool()
 def get_health_summary(user_name: str) -> str:
@@ -174,19 +174,19 @@ def get_wearable_summary(user_name: str) -> str:
     uid = get_uid_by_name(user_name)
     if not uid:
         return "Profile nahi mila."
-   data = supabase.table("wearable_data").select("*").eq("user_id", uid).order("synced_at", desc=True).limit(1).execute()
+    data = supabase.table("wearable_data").select("*").eq("user_id", uid).order("synced_at", desc=True).limit(1).execute()
     if not data.data:
         return "Koi wearable data nahi mila."
     w = data.data[0]
-        return f"""
-    Wearable Data:
-    Steps: {w.get('avg_daily_steps')}
-    Sleep: {w.get('avg_sleep_hours')} hrs
-    Resting Heart Rate: {w.get('resting_heart_rate')} bpm
-    Calories Burned: {w.get('calories_burned')}
-    Source Device: {w.get('source_device')}
-    Last Sync: {w.get('synced_at')}
-    """
+    return f"""
+Wearable Data:
+Steps: {w.get('avg_daily_steps')}
+Sleep: {w.get('avg_sleep_hours')} hrs
+Resting Heart Rate: {w.get('resting_heart_rate')} bpm
+Calories Burned: {w.get('calories_burned')}
+Source Device: {w.get('source_device')}
+Last Sync: {w.get('synced_at')}
+"""
 
 @mcp.tool()
 def log_symptom(user_name: str, symptom: str, severity: str = "mild") -> str:
@@ -254,7 +254,7 @@ def trigger_emergency(user_name: str, situation: str = "Emergency") -> str:
 
     profile_info = "Unknown User"
     if uid:
-       profile = supabase.table("user_profile").select("*").eq("id", uid).single().execute()
+        profile = supabase.table("user_profile").select("*").eq("id", uid).single().execute()
         if profile.data:
             p = profile.data
             profile_info = f"Naam: {p.get('name')} | Umar: {p.get('age')} | Gender: {p.get('gender')} | Conditions: {p.get('conditions',[])}"
